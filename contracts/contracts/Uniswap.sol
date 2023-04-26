@@ -22,4 +22,16 @@ contract Uniswap {
             tokenInstanceMap[tokens[i]] = token;
         }
     }
+
+    function getBalance(string memory tokenName, address _address) public view returns (uint) {
+        return tokenInstanceMap[tokenName].balanceOf(_address);
+    }
+
+    function getName(string memory tokenName) public view returns(string memory) {
+        return tokenInstanceMap[tokenName].name();
+    }
+
+    function getTokenAddress(string memory tokenName) public view returns (address) {
+        return address(tokenInstanceMap[tokenName]);
+    }
 }
