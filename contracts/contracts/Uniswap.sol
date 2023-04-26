@@ -9,3 +9,17 @@ contract CustomToken is ERC20 {
         _mint(msg.sender, 100000 * 10 ** 18);
     }
 }
+
+contract Uniswap {
+    
+    string[] public tokens = ['CoinA', 'CoinB', 'CoinC'];
+    mapping(string => ERC20) public tokenInstanceMap;
+    uint ethValue=100000000000000;
+    
+    constructor() {
+        for(uint i = 0; i < tokens.length; i++){
+            CustomToken token = new CustomToken(tokens[i], tokens[i]);
+            tokenInstanceMap[tokens[i]] = token;
+        }
+    }
+}
