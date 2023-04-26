@@ -34,4 +34,29 @@ contract Uniswap {
     function getTokenAddress(string memory tokenName) public view returns (address) {
         return address(tokenInstanceMap[tokenName]);
     }
+
+    function swapEthToToken(string memory tokenName) public payable returns (uint) {
+        uint inputValue = msg.value;
+        uint outputValue = (inputValue / ethValue) * 10 ** 18; // Conver to 18 decimal
+        require(tokenInstanceMap[tokenName].transfer(msg.sender, outputValue));
+        return outputValue;
+    }
+
+    function swapTokentoEth(string memory tokenName, uint _amount) public returns (uint) {
+        uint exactAmount = _amount / 10 ** 18;
+        uint ethToBeTransferred = exactAmount * ethValue;
+        require(address(this).balance >= ethToBeTransferred, "Dex is running low on balance");
+        payable(msg.sender).transfer(ethToBeTransferred);
+        require(tokenInstanceMap[tokenName].transferFrom(msg.sender, address(this), _amount));
+        return ethToBeTransferred;
+    }
+
+    function swapTokenToToken(string memory srcTokenName, string memory destTokenName, uint _amount) public {
+        require(tokenInstanceMap[srcTokenName].transferFrom(msg.sender, address(this), _amount));
+        require(tokenInstanceMap[destTokenName].transfer(msg.sender, _amount));
+        }
+
+    function getEthBalance() public view returns (uint) {
+        return address(this).balance;
+    }
 }
